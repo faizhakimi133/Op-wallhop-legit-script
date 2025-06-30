@@ -1,0 +1,154 @@
+local player = game.Players.LocalPlayer
+local CoreGui = game:GetService("CoreGui")
+local UIS = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
+
+local key = "supersecretcodeforisscript"
+local keyFile = "facckbro_key.txt"
+
+-- Check for file saving support
+local hasFileSupport = pcall(function()
+	writefile(keyFile, "test")
+	readfile(keyFile)
+	delfile(keyFile)
+end)
+
+-- Wallhop function
+local function wallhop()
+	local gui = Instance.new("ScreenGui", CoreGui)
+	gui.Name = "WallhopUI"
+	gui.ResetOnSpawn = false
+
+	local bigMsg = Instance.new("TextLabel", gui)
+	bigMsg.Size = UDim2.new(0, 500, 0, 100)
+	bigMsg.Position = UDim2.new(0.5, -250, 0.3, 0)
+	bigMsg.BackgroundTransparency = 1
+	bigMsg.Text = "IF YOU ARE ON PC PRESS K"
+	bigMsg.TextColor3 = Color3.new(0, 1, 0)
+	bigMsg.TextScaled = true
+	bigMsg.Font = Enum.Font.SourceSansBold
+
+	task.delay(7.5, function()
+		bigMsg:Destroy()
+	end)
+
+	local button = Instance.new("TextButton", gui)
+	button.Size = UDim2.new(0, 100, 0, 50)
+	button.Position = UDim2.new(0.4, 0, 0.8, 0)
+	button.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+	button.Text = "Wallhop Flick"
+	button.TextColor3 = Color3.new(1, 1, 1)
+	button.TextScaled = true
+	button.Draggable = true
+	button.Active = true
+
+	local function flick()
+		local cam = workspace.CurrentCamera
+		local orig = cam.CFrame
+		cam.CFrame = orig * CFrame.Angles(0, math.rad(-70), 0)
+		task.wait(0.03)
+		cam.CFrame = orig
+	end
+
+	button.MouseButton1Click:Connect(flick)
+	UIS.InputBegan:Connect(function(input, gpe)
+		if not gpe and input.KeyCode == Enum.KeyCode.K then
+			flick()
+		end
+	end)
+end
+
+-- Key GUI
+local function showKeyGUI()
+	local gui = Instance.new("ScreenGui", CoreGui)
+	gui.Name = "KeySystem"
+	gui.ResetOnSpawn = false
+
+	local frame = Instance.new("Frame", gui)
+	frame.Size = UDim2.new(0, 450, 0, 250)
+	frame.Position = UDim2.new(0.5, -225, 0.5, -125)
+	frame.BackgroundColor3 = Color3.fromRGB(40, 40, 80)
+	frame.BorderSizePixel = 0
+	Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 20)
+
+	local gradient = Instance.new("UIGradient", frame)
+	gradient.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 0, 150)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 100, 255))
+	}
+	gradient.Rotation = 45
+
+	local label = Instance.new("TextLabel", frame)
+	label.Size = UDim2.new(1, 0, 0, 40)
+	label.Position = UDim2.new(0, 0, 0, 10)
+	label.BackgroundTransparency = 1
+	label.Text = "Script by 00tf_facckbro"
+	label.Font = Enum.Font.GothamBold
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.TextScaled = true
+
+	local textbox = Instance.new("TextBox", frame)
+	textbox.Size = UDim2.new(0.8, 0, 0, 45)
+	textbox.Position = UDim2.new(0.1, 0, 0.35, 0)
+	textbox.PlaceholderText = "Enter your key here..."
+	textbox.Font = Enum.Font.SourceSans
+	textbox.TextColor3 = Color3.new(1, 1, 1)
+	textbox.BackgroundColor3 = Color3.fromRGB(60, 60, 100)
+	textbox.TextScaled = true
+	Instance.new("UICorner", textbox).CornerRadius = UDim.new(0, 10)
+
+	local message = Instance.new("TextLabel", frame)
+	message.Size = UDim2.new(1, -40, 0, 40)
+	message.Position = UDim2.new(0, 20, 0.65, 0)
+	message.BackgroundTransparency = 1
+	message.Font = Enum.Font.Gotham
+	message.TextColor3 = Color3.new(1, 0.3, 0.3)
+	message.Text = ""
+	message.TextScaled = true
+
+	local submit = Instance.new("TextButton", frame)
+	submit.Size = UDim2.new(0.35, 0, 0, 40)
+	submit.Position = UDim2.new(0.1, 0, 0.82, 0)
+	submit.Text = "Submit"
+	submit.Font = Enum.Font.GothamBold
+	submit.TextScaled = true
+	submit.BackgroundColor3 = Color3.fromRGB(80, 200, 100)
+	submit.TextColor3 = Color3.new(1, 1, 1)
+	Instance.new("UICorner", submit).CornerRadius = UDim.new(0, 10)
+
+	local copyBtn = Instance.new("TextButton", frame)
+	copyBtn.Size = UDim2.new(0.35, 0, 0, 40)
+	copyBtn.Position = UDim2.new(0.55, 0, 0.82, 0)
+	copyBtn.Text = "Copy Key URL"
+	copyBtn.Font = Enum.Font.Gotham
+	copyBtn.TextScaled = true
+	copyBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
+	copyBtn.TextColor3 = Color3.new(1, 1, 1)
+	Instance.new("UICorner", copyBtn).CornerRadius = UDim.new(0, 10)
+
+	copyBtn.MouseButton1Click:Connect(function()
+		setclipboard("https://pastebin.com/NkGbt2Q9")
+		message.Text = "Copied key link to clipboard!"
+	end)
+
+	submit.MouseButton1Click:Connect(function()
+		if textbox.Text == key then
+			if hasFileSupport then
+				writefile(keyFile, key)
+			end
+			gui:Destroy()
+			wallhop()
+		else
+			message.Text = "❌ Wrong key. Try again!"
+		end
+	end)
+end
+
+-- Logic to decide
+if player.UserId == 8792749416 then
+	wallhop()
+elseif hasFileSupport and isfile(keyFile) and readfile(keyFile):lower() == key:lower() then
+	wallhop()
+else
+	showKeyGUI()
+end
